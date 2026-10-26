@@ -1,0 +1,1 @@
+"""Diabetes report application foundation."""

@@ -1,0 +1,508 @@
+{
+  "version": "0.1.0-draft",
+  "schema_version": "1.0",
+  "updated_at": "2026-10-26",
+  "clinical_use_enabled": false,
+  "clinical_review": {
+    "status": "pending",
+    "reviewer": null,
+    "reviewed_at": null,
+    "open_decisions": [
+      "Q01",
+      "Q02",
+      "Q03",
+      "Q04",
+      "Q05",
+      "Q06",
+      "Q07"
+    ]
+  },
+  "sources": {
+    "project_instructions": {
+      "title": "AGENTS.md: Clinical rules",
+      "path": "../AGENTS.md",
+      "note": "Primary transcription source for all numeric bounds and comparison operators in this draft."
+    },
+    "ada_2026": {
+      "title": "2. Diagnosis and Classification of Diabetes: Standards of Care in Diabetes—2026",
+      "url": "https://diabetesjournals.org/care/article/49/Supplement_1/S27/163926/2-Diagnosis-and-Classification-of-Diabetes",
+      "pdf_url": "https://diabetesjournals.org/care/article-pdf/49/Supplement_1/S27/848854/dc26s002.pdf",
+      "doi": "10.2337/dc26-S002",
+      "tables": [
+        "2.1",
+        "2.2"
+      ],
+      "checked_on": "2026-10-26",
+      "verification_note": "Rechecked on 2026-10-26: the indexed publisher PDF text of Tables 2.1 and 2.2 matches the supplied diabetes and prediabetes bounds. Direct retrieval of both the article and PDF returned HTTP 403. This source check is not clinical approval and does not validate the project's urgent-notice starting points."
+    }
+  },
+  "interpretation_policy": {
+    "purpose": "screening_and_education",
+    "requires_all_values_confirmed": true,
+    "excluded_populations": [
+      "pregnancy",
+      "children",
+      "people_already_treated_for_diabetes"
+    ],
+    "excluded_population_result": "out_of_scope",
+    "unknown_eligibility_result": "not_classified",
+    "compare_in": "reported_unit",
+    "bounds_semantics": "A null bound is unbounded. Non-null bounds apply their explicit inclusive flag. All bounds are transcribed literally from AGENTS.md.",
+    "precision_policy": "Do not round, convert, bridge gaps, or extrapolate to make a value match a band. Decimal precision and cross-unit equivalence require review under Q02.",
+    "unmatched_result": "not_classified",
+    "overall_status_policy": "pending_clinical_review_Q07",
+    "urgent_notice_is_separate_from_classification": true
+  },
+  "tests": {
+    "fasting_plasma_glucose": {
+      "accepted_units": [
+        "mg/dL",
+        "mmol/L"
+      ],
+      "classification": "draft",
+      "requires": [
+        "eligible_population",
+        "all_values_confirmed",
+        "fasting_context_confirmed",
+        "applicable_specimen_confirmed"
+      ]
+    },
+    "two_hour_ogtt": {
+      "accepted_units": [
+        "mg/dL",
+        "mmol/L"
+      ],
+      "classification": "draft",
+      "requires": [
+        "eligible_population",
+        "all_values_confirmed",
+        "two_hour_ogtt_protocol_confirmed",
+        "applicable_specimen_confirmed"
+      ]
+    },
+    "hba1c": {
+      "accepted_units": [
+        "%"
+      ],
+      "classification": "draft",
+      "requires": [
+        "eligible_population",
+        "all_values_confirmed",
+        "hba1c_applicability_confirmed"
+      ]
+    },
+    "random_plasma_glucose": {
+      "accepted_units": [
+        "mg/dL",
+        "mmol/L"
+      ],
+      "classification": "diabetes_range_only",
+      "requires": [
+        "eligible_population",
+        "all_values_confirmed",
+        "classic_symptoms_present",
+        "applicable_specimen_confirmed"
+      ],
+      "no_matching_rule_result": "not_classified",
+      "source_note": "AGENTS.md: random glucose is not used to classify normal or prediabetes. ADA 2026 Table 2.1 requires relevant symptoms for the supplied random-glucose criterion."
+    },
+    "two_hour_post_prandial": {
+      "accepted_units": [
+        "mg/dL",
+        "mmol/L"
+      ],
+      "classification": "not_configured",
+      "no_matching_rule_result": "not_classified",
+      "source_note": "AGENTS.md requires extraction of this test but supplies no classification thresholds. Do not reuse the two-hour OGTT bands; resolve Q06 with the clinical reviewer."
+    }
+  },
+  "classification_rules": [
+    {
+      "id": "fasting_normal_mg_dl",
+      "test": "fasting_plasma_glucose",
+      "unit": "mg/dL",
+      "status": "normal",
+      "lower_bound": null,
+      "upper_bound": {
+        "value": 100,
+        "inclusive": false
+      },
+      "source_ids": [
+        "project_instructions",
+        "ada_2026"
+      ],
+      "source_note": "AGENTS.md, Clinical rules, fasting plasma glucose: below the supplied prediabetes lower bound. ADA 2026 Table 2.2 supports that boundary; the normal label is a project screening convention and does not exclude other concerns."
+    },
+    {
+      "id": "fasting_prediabetes_mg_dl",
+      "test": "fasting_plasma_glucose",
+      "unit": "mg/dL",
+      "status": "prediabetes_range",
+      "lower_bound": {
+        "value": 100,
+        "inclusive": true
+      },
+      "upper_bound": {
+        "value": 125,
+        "inclusive": true
+      },
+      "source_ids": [
+        "project_instructions",
+        "ada_2026"
+      ],
+      "source_note": "AGENTS.md, Clinical rules, fasting plasma glucose: the supplied prediabetes interval includes both endpoints; cross-checked against ADA 2026 Table 2.2. Intermediate precision is unresolved under Q02."
+    },
+    {
+      "id": "fasting_diabetes_mg_dl",
+      "test": "fasting_plasma_glucose",
+      "unit": "mg/dL",
+      "status": "diabetes_range",
+      "lower_bound": {
+        "value": 126,
+        "inclusive": true
+      },
+      "upper_bound": null,
+      "source_ids": [
+        "project_instructions",
+        "ada_2026"
+      ],
+      "source_note": "AGENTS.md, Clinical rules, fasting plasma glucose: at or above the supplied diabetes-range boundary; cross-checked against ADA 2026 Table 2.1. This is not a diagnosis."
+    },
+    {
+      "id": "fasting_normal_mmol_l",
+      "test": "fasting_plasma_glucose",
+      "unit": "mmol/L",
+      "status": "normal",
+      "lower_bound": null,
+      "upper_bound": {
+        "value": 5.6,
+        "inclusive": false
+      },
+      "source_ids": [
+        "project_instructions",
+        "ada_2026"
+      ],
+      "source_note": "AGENTS.md, Clinical rules, fasting plasma glucose: below the supplied prediabetes lower bound. ADA 2026 Table 2.2 supports that boundary; the normal label is a project screening convention and does not exclude other concerns."
+    },
+    {
+      "id": "fasting_prediabetes_mmol_l",
+      "test": "fasting_plasma_glucose",
+      "unit": "mmol/L",
+      "status": "prediabetes_range",
+      "lower_bound": {
+        "value": 5.6,
+        "inclusive": true
+      },
+      "upper_bound": {
+        "value": 6.9,
+        "inclusive": true
+      },
+      "source_ids": [
+        "project_instructions",
+        "ada_2026"
+      ],
+      "source_note": "AGENTS.md, Clinical rules, fasting plasma glucose: the supplied prediabetes interval includes both endpoints; cross-checked against ADA 2026 Table 2.2. Intermediate precision is unresolved under Q02."
+    },
+    {
+      "id": "fasting_diabetes_mmol_l",
+      "test": "fasting_plasma_glucose",
+      "unit": "mmol/L",
+      "status": "diabetes_range",
+      "lower_bound": {
+        "value": 7,
+        "inclusive": true
+      },
+      "upper_bound": null,
+      "source_ids": [
+        "project_instructions",
+        "ada_2026"
+      ],
+      "source_note": "AGENTS.md, Clinical rules, fasting plasma glucose: at or above the supplied diabetes-range boundary; cross-checked against ADA 2026 Table 2.1. This is not a diagnosis."
+    },
+    {
+      "id": "ogtt_normal_mg_dl",
+      "test": "two_hour_ogtt",
+      "unit": "mg/dL",
+      "status": "normal",
+      "lower_bound": null,
+      "upper_bound": {
+        "value": 140,
+        "inclusive": false
+      },
+      "source_ids": [
+        "project_instructions",
+        "ada_2026"
+      ],
+      "source_note": "AGENTS.md, Clinical rules, two-hour OGTT: below the supplied prediabetes lower bound. ADA 2026 Table 2.2 supports that boundary; the normal label is a project screening convention and does not exclude other concerns."
+    },
+    {
+      "id": "ogtt_prediabetes_mg_dl",
+      "test": "two_hour_ogtt",
+      "unit": "mg/dL",
+      "status": "prediabetes_range",
+      "lower_bound": {
+        "value": 140,
+        "inclusive": true
+      },
+      "upper_bound": {
+        "value": 199,
+        "inclusive": true
+      },
+      "source_ids": [
+        "project_instructions",
+        "ada_2026"
+      ],
+      "source_note": "AGENTS.md, Clinical rules, two-hour OGTT: the supplied prediabetes interval includes both endpoints; cross-checked against ADA 2026 Table 2.2. Intermediate precision is unresolved under Q02."
+    },
+    {
+      "id": "ogtt_diabetes_mg_dl",
+      "test": "two_hour_ogtt",
+      "unit": "mg/dL",
+      "status": "diabetes_range",
+      "lower_bound": {
+        "value": 200,
+        "inclusive": true
+      },
+      "upper_bound": null,
+      "source_ids": [
+        "project_instructions",
+        "ada_2026"
+      ],
+      "source_note": "AGENTS.md, Clinical rules, two-hour OGTT: at or above the supplied diabetes-range boundary; cross-checked against ADA 2026 Table 2.1. This is not a diagnosis."
+    },
+    {
+      "id": "ogtt_normal_mmol_l",
+      "test": "two_hour_ogtt",
+      "unit": "mmol/L",
+      "status": "normal",
+      "lower_bound": null,
+      "upper_bound": {
+        "value": 7.8,
+        "inclusive": false
+      },
+      "source_ids": [
+        "project_instructions",
+        "ada_2026"
+      ],
+      "source_note": "AGENTS.md, Clinical rules, two-hour OGTT: below the supplied prediabetes lower bound. ADA 2026 Table 2.2 supports that boundary; the normal label is a project screening convention and does not exclude other concerns."
+    },
+    {
+      "id": "ogtt_prediabetes_mmol_l",
+      "test": "two_hour_ogtt",
+      "unit": "mmol/L",
+      "status": "prediabetes_range",
+      "lower_bound": {
+        "value": 7.8,
+        "inclusive": true
+      },
+      "upper_bound": {
+        "value": 11,
+        "inclusive": true
+      },
+      "source_ids": [
+        "project_instructions",
+        "ada_2026"
+      ],
+      "source_note": "AGENTS.md, Clinical rules, two-hour OGTT: the supplied prediabetes interval includes both endpoints; cross-checked against ADA 2026 Table 2.2. Intermediate precision is unresolved under Q02."
+    },
+    {
+      "id": "ogtt_diabetes_mmol_l",
+      "test": "two_hour_ogtt",
+      "unit": "mmol/L",
+      "status": "diabetes_range",
+      "lower_bound": {
+        "value": 11.1,
+        "inclusive": true
+      },
+      "upper_bound": null,
+      "source_ids": [
+        "project_instructions",
+        "ada_2026"
+      ],
+      "source_note": "AGENTS.md, Clinical rules, two-hour OGTT: at or above the supplied diabetes-range boundary; cross-checked against ADA 2026 Table 2.1. This is not a diagnosis."
+    },
+    {
+      "id": "hba1c_normal_percent",
+      "test": "hba1c",
+      "unit": "%",
+      "status": "normal",
+      "lower_bound": null,
+      "upper_bound": {
+        "value": 5.7,
+        "inclusive": false
+      },
+      "source_ids": [
+        "project_instructions",
+        "ada_2026"
+      ],
+      "source_note": "AGENTS.md, Clinical rules, HbA1c: below the supplied prediabetes lower bound. ADA 2026 Table 2.2 supports that boundary; the normal label is a project screening convention and does not exclude other concerns."
+    },
+    {
+      "id": "hba1c_prediabetes_percent",
+      "test": "hba1c",
+      "unit": "%",
+      "status": "prediabetes_range",
+      "lower_bound": {
+        "value": 5.7,
+        "inclusive": true
+      },
+      "upper_bound": {
+        "value": 6.4,
+        "inclusive": true
+      },
+      "source_ids": [
+        "project_instructions",
+        "ada_2026"
+      ],
+      "source_note": "AGENTS.md, Clinical rules, HbA1c: the supplied prediabetes interval includes both endpoints; cross-checked against ADA 2026 Table 2.2. Intermediate precision is unresolved under Q02."
+    },
+    {
+      "id": "hba1c_diabetes_percent",
+      "test": "hba1c",
+      "unit": "%",
+      "status": "diabetes_range",
+      "lower_bound": {
+        "value": 6.5,
+        "inclusive": true
+      },
+      "upper_bound": null,
+      "source_ids": [
+        "project_instructions",
+        "ada_2026"
+      ],
+      "source_note": "AGENTS.md, Clinical rules, HbA1c: at or above the supplied diabetes-range boundary; cross-checked against ADA 2026 Table 2.1. This is not a diagnosis."
+    },
+    {
+      "id": "random_diabetes_mg_dl",
+      "test": "random_plasma_glucose",
+      "unit": "mg/dL",
+      "status": "diabetes_range",
+      "lower_bound": {
+        "value": 200,
+        "inclusive": true
+      },
+      "upper_bound": null,
+      "source_ids": [
+        "project_instructions",
+        "ada_2026"
+      ],
+      "source_note": "AGENTS.md, Clinical rules, random glucose: at or above the supplied boundary only with classic symptoms; cross-checked against ADA 2026 Table 2.1. No normal or prediabetes band is defined.",
+      "requires": [
+        "classic_symptoms_present"
+      ]
+    },
+    {
+      "id": "random_diabetes_mmol_l",
+      "test": "random_plasma_glucose",
+      "unit": "mmol/L",
+      "status": "diabetes_range",
+      "lower_bound": {
+        "value": 11.1,
+        "inclusive": true
+      },
+      "upper_bound": null,
+      "source_ids": [
+        "project_instructions",
+        "ada_2026"
+      ],
+      "source_note": "AGENTS.md, Clinical rules, random glucose: at or above the supplied boundary only with classic symptoms; cross-checked against ADA 2026 Table 2.1. No normal or prediabetes band is defined.",
+      "requires": [
+        "classic_symptoms_present"
+      ]
+    }
+  ],
+  "urgent_notice_rules": [
+    {
+      "id": "urgent_low_mg_dl",
+      "analyte": "glucose",
+      "unit": "mg/dL",
+      "notice": "urgent_low",
+      "operator": "lt",
+      "value": 70,
+      "applies_to_tests": [
+        "fasting_plasma_glucose",
+        "random_plasma_glucose",
+        "two_hour_post_prandial",
+        "two_hour_ogtt"
+      ],
+      "requires": [
+        "all_values_confirmed",
+        "clinical_approval_before_use"
+      ],
+      "clinical_review_status": "pending",
+      "source_ids": [
+        "project_instructions"
+      ],
+      "source_note": "AGENTS.md, Clinical rules: provisional urgent-notice starting point, strictly below the supplied value. Clinical reviewer must approve trigger, applicability and notice text under Q03. This is not presented as an ADA diagnostic criterion."
+    },
+    {
+      "id": "urgent_low_mmol_l",
+      "analyte": "glucose",
+      "unit": "mmol/L",
+      "notice": "urgent_low",
+      "operator": "lt",
+      "value": 3.9,
+      "applies_to_tests": [
+        "fasting_plasma_glucose",
+        "random_plasma_glucose",
+        "two_hour_post_prandial",
+        "two_hour_ogtt"
+      ],
+      "requires": [
+        "all_values_confirmed",
+        "clinical_approval_before_use"
+      ],
+      "clinical_review_status": "pending",
+      "source_ids": [
+        "project_instructions"
+      ],
+      "source_note": "AGENTS.md, Clinical rules: provisional urgent-notice starting point, strictly below the supplied value. Clinical reviewer must approve trigger, applicability and notice text under Q03. This is not presented as an ADA diagnostic criterion."
+    },
+    {
+      "id": "urgent_high_mg_dl",
+      "analyte": "glucose",
+      "unit": "mg/dL",
+      "notice": "urgent_high",
+      "operator": "gt",
+      "value": 300,
+      "applies_to_tests": [
+        "fasting_plasma_glucose",
+        "random_plasma_glucose",
+        "two_hour_post_prandial",
+        "two_hour_ogtt"
+      ],
+      "requires": [
+        "all_values_confirmed",
+        "clinical_approval_before_use"
+      ],
+      "clinical_review_status": "pending",
+      "source_ids": [
+        "project_instructions"
+      ],
+      "source_note": "AGENTS.md, Clinical rules: provisional urgent-notice starting point, strictly above the supplied value. Clinical reviewer must approve trigger, applicability and notice text under Q03. This is not presented as an ADA diagnostic criterion."
+    },
+    {
+      "id": "urgent_high_mmol_l",
+      "analyte": "glucose",
+      "unit": "mmol/L",
+      "notice": "urgent_high",
+      "operator": "gt",
+      "value": 16.7,
+      "applies_to_tests": [
+        "fasting_plasma_glucose",
+        "random_plasma_glucose",
+        "two_hour_post_prandial",
+        "two_hour_ogtt"
+      ],
+      "requires": [
+        "all_values_confirmed",
+        "clinical_approval_before_use"
+      ],
+      "clinical_review_status": "pending",
+      "source_ids": [
+        "project_instructions"
+      ],
+      "source_note": "AGENTS.md, Clinical rules: provisional urgent-notice starting point, strictly above the supplied value. Clinical reviewer must approve trigger, applicability and notice text under Q03. This is not presented as an ADA diagnostic criterion."
+    }
+  ]
+}

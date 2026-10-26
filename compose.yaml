@@ -1,0 +1,25 @@
+services:
+  postgres:
+    image: postgres:17.6
+    environment:
+      POSTGRES_USER: report
+      POSTGRES_PASSWORD: local-report-password
+      POSTGRES_DB: report_dev
+    ports:
+      - '127.0.0.1:5432:5432'
+    volumes:
+      - report_database:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U report -d report_dev']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  redis:
+    image: redis:7.4.5
+    command: ['redis-server', '--save', '', '--appendonly', 'no']
+    ports:
+      - '127.0.0.1:6379:6379'
+    tmpfs:
+      - /data
+volumes:
+  report_database:
