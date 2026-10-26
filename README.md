@@ -73,7 +73,7 @@ npm run test:e2e
 
 Browser tests start the API and the built Vite preview automatically if they are not already running, and use the database configured in `.env` or the environment. Run `npm run build` first. They create synthetic accounts in that development/test database and local outbox. They check desktop/mobile navigation, keyboard access, both themes, automated accessibility, offline handling and the account flow. Test accounts are development data; use a dedicated database for automated runs. An existing Microsoft Edge installation can be used by setting `PLAYWRIGHT_CHANNEL=msedge`; CI uses downloaded Chromium.
 
-The no-gradient and theme-contrast checks run with `npm test`. API tests cover authentication, token reuse/expiry, CSRF/origin checks, throttling, data redaction, schema ownership, exact decimals and account cascades. The migration is also exercised on a clean database and rolled back/upgraded in CI. GitHub Actions runs these checks on pushes and pull requests; a remote repository is needed to obtain an actual GitHub run.
+The no-gradient and theme-contrast checks run with `npm test`. API tests cover authentication, token reuse/expiry, CSRF/origin checks, throttling, data redaction, schema ownership, exact decimals and account cascades. The migration is also exercised on a clean database and rolled back/upgraded in CI. [GitHub Actions](https://github.com/SamPapaEmmanuel/Diabete-AI-/actions/workflows/ci.yml) runs these checks on pushes and pull requests.
 
 ## Project layout
 
